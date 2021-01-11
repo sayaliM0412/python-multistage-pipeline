@@ -6,14 +6,36 @@
 trigger:
 - main
 
-pool:
-  vmImage: 'ubuntu-latest'
+stages:
+- stage: build
+  displayName: Build
+  pool:
+    vmImage: 'ubuntu-latest'
+  jobs:
+  - job: 'Test'
+    displayName: build solution  
+    steps:
+    - script: echo Hello, world!
+      displayName: 'Run a one-line script'
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+    - script: |
+        echo Add other tasks to build, test, and deploy your project.
+        echo See https://aka.ms/yaml
+      displayName: 'Run a multi-line script'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+- stage: test
+  displayName: Test
+  dependsOn:
+  - build
+  jobs:
+  - job: test_dotnet_solution
+    displayName: test dotnet solution
+    steps:
+      - task: UsePythonVersion@0
+        displayName: 'Use Python $(python.version)'
+        inputs:
+          versionSpec: '$(python.version)'
+      - script: |
+          python -m pip install flake8
+          flake8 .
+        displayName: 'Run lint tests'
