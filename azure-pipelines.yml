@@ -28,8 +28,8 @@ stages:
   dependsOn:
   - build
   jobs:
-  - job: test_dotnet_solution
-    displayName: test dotnet solution
+  - job: test_python_solution
+    displayName: test python solution
     steps:
       - task: UsePythonVersion@0
         displayName: 'Use Python $(python.version)'
